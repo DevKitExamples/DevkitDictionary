@@ -116,6 +116,8 @@ static void DoReceived()
     Screen.print(0, "Definition:");
     Screen.print(1, msgBody, true);
     rgbLed.setColor(0, 0, RGB_LED_BRIGHTNESS);
+    Serial.print("Definition: ");
+    Serial.println(msgBody);
     Serial.println("Press A to scroll. Press B to look up another word.");
 }
 
