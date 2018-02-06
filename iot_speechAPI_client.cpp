@@ -36,7 +36,13 @@ int iot_client_get_token(const char *key1)
     }
     else
     {
-        current_token = (char *)response->body;
+        const char *result = response->body;
+        if (current_token != NULL)
+        {
+            free(current_token);
+        }
+        current_token = (char *)malloc(strlen(result) + 1);
+        strcpy(current_token, result);
         return 0;
     }
 }
@@ -50,7 +56,7 @@ char *iot_client_send_audio(const char *content, int length)
     conversionRequest.set_header("Accept", "application/json;text/xml");
     conversionRequest.set_header("Content-Type", "audio/wav; codec="
                                                  "audio/pcm"
-                                                 "; samplerate=1600");
+                                                 "; samplerate=8000");
     conversionRequest.set_header("Authorization", auth.c_str());
     const Http_Response *response = conversionRequest.send(content, length);
 
@@ -81,7 +87,9 @@ char *iot_client_send_audio(const char *content, int length)
                 json_DisplayText[strlen(json_DisplayText) - 1] = 0;
                 Serial.print("Word: ");
                 Serial.println(json_DisplayText);
-                return json_DisplayText;
+                char *ret = (char *)malloc(strlen(json_DisplayText) + 1);
+                strcpy(ret, json_DisplayText);
+                return ret;
             }
         }
         else

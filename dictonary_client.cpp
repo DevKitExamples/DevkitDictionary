@@ -41,8 +41,7 @@ char *dictionary_client_send_request(const char *requiredWord)
 
     HTTPClient dictionaryRequest = HTTPClient(Oxford_Cert, HTTP_GET, url);
     dictionaryRequest.set_header("app_id", appIdInternal);
-    dictionaryRequest.set_header("app_key", appKeysInternal
-    );
+    dictionaryRequest.set_header("app_key", appKeysInternal);
     const Http_Response *response = dictionaryRequest.send();
     if (response != NULL && response -> status_code == 200)
     {

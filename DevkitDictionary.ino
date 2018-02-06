@@ -83,7 +83,7 @@ void setup()
 
 static void ScrollDefinition(void)
 {
-    if (msgBody[0] != 0 && digitalRead(USER_BUTTON_A) == LOW)
+    if (msgBody != NULL && msgBody[0] != 0 && digitalRead(USER_BUTTON_A) == LOW)
     {
         //Scroll it if Button A has been pressed
         msgStart += 16;
@@ -124,6 +124,10 @@ static void DoDictionaryRequest()
     Screen.print(0, "Processing ...     ");
     Screen.print(1, "Sending dictionary request", true);
     rgbLed.setColor(0, RGB_LED_BRIGHTNESS, 0);
+    if (msgBody != NULL)
+    {
+        free(msgBody);
+    }
     msgBody = dictionary_client_send_request(wordToSend);
 }
 
@@ -142,6 +146,10 @@ static void DoSpeechToTextRequest()
     {
         DoSTTRequest();
         iot_client_get_token(key1);
+        if (wordToSend != NULL)
+        {
+            free(wordToSend);
+        }
         wordToSend = iot_client_send_audio(waveFile, size);
         status = 2;
     }
