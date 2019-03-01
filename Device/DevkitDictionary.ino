@@ -112,15 +112,25 @@ static void enterRecordState()
     rgbLed.setColor(RGB_LED_BRIGHTNESS, 0, 0);
 }
 
+
 static void DoReceived()
 {
-    Screen.clean();
-    Screen.print(0, wordToSend);
-    Screen.print(1, msgBody, true);
-    rgbLed.setColor(0, 0, RGB_LED_BRIGHTNESS);
-    Serial.print("Definition: ");
-    Serial.println(msgBody);
-    Serial.println("Press B to scroll. Press A to look up another word.");
+    if(msgBody != NULL)
+    {
+        Screen.clean();
+        Screen.print(0, wordToSend);
+        Screen.print(1, msgBody, true);
+        rgbLed.setColor(0, 0, RGB_LED_BRIGHTNESS);
+        Serial.print("Definition: ");
+        Serial.println(msgBody);
+        Serial.println("Press B to scroll. Press A to look up another word.");
+    }
+    else
+    {
+        Screen.clean();
+        Screen.print(0, "Failed: ");
+        Screen.print(1, "Unable to find the definition of the word", true);
+    }
 }
 
 static void DoDictionaryRequest()

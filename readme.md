@@ -1,61 +1,115 @@
-# Devkit Dictionary
+# IoT Devkit Dictionary
 
-This project shows how to configure DevKit to use Azure Bing Speech API Service and oxford dictionary API. Then you can search dictionary on Devkit with voice. In this tutorial, you will learn how to:
+In this tutorial, you will learn how to configure DevKit to use Azure Speech Service and Oxford dictionaries API. This example includes:
 
-* Create and use Azure Bing Speech API Service
-* Register and use oxford dictionary API
+* Create and use Azure Speech Service.
+* Register and use Oxford Dictionaries API.
 
-The status flow of our program:
+## About IoT DevKit
+
+The [MXChip IoT DevKit](https://aka.ms/iot-devkit) (a.k.a. IoT DevKit) is an all-in-one Arduino compatible board with rich peripherals and sensors. You can develop for it using [Azure IoT Device Workbench ](https://aka.ms/azure-iot-workbench). And it comes with a growing [projects catalog](https://aka.ms/devkit/project-catalog) to guide you prototype Internet of Things (IoT) solutions that take advantage of Microsoft Azure services.
+
+
+## The status flow of the example:
 
 ![Status flow](status-flow.png)
 
 ## Before you begin
 
-To complete the steps in this tutorial, you need the following:
+To complete the steps in this tutorial, you need to do the following:
 
 * Prepare your DevKit with [Getting Started Guide](https://microsoft.github.io/azure-iot-developer-kit/docs/get-started/).
-* Upgrade to latest firmware (>= 1.3.0) with [Firmware Upgrading](https://microsoft.github.io/azure-iot-developer-kit/docs/firmware-upgrading/) tutorial.
+* Upgrade to latest firmware (>= 1.6.0) with [Firmware Upgrading](https://microsoft.github.io/azure-iot-developer-kit/docs/firmware-upgrading/) tutorial.
 
 ## Set up the Environment
 
 ### Setting up the Azure Environment (Bing Speech API)
 
 1. Log in to the [Azure portal](https://portal.azure.com/).
-2. Create a Bing Speech API using the green + sign. Create a new F0 tier speech API if needed. Pin it to your dashboard for easy access.
 
-![Create Bing Speech API](screenshots/create-BingSpeechAPI.png)
+1. Create a new Speech Service by searching **Speech** in Azure portal and click **Create**. 
 
-3. Once the speech API has been created, navigate to its main page. Click “Keys”. Copy Key 1, it will be needed for later use.
+    ![Create Bing Speech API](screenshots/create-BingSpeechAPI.png)
 
-![Copy Bing Speech API key1](screenshots/copy-BingSpeechAPI-key1.png)
+1. Provide the information including **Name**, **Location**, **Price Tier** and click **Create**. Wait for the deployment to finish and pin it to your dashboard for easy access.
+
+1. Once the Speech Service was created, navigate to its main page. Click **Keys**. Copy KEY 1 and we will use it in the later session.
+
+    ![Copy Bing Speech API key1](screenshots/copy-BingSpeechAPI-key1.png)
 
 
-### Setting up the dictionary API (Dictionary)
+### Register for Oxford Dictionaries APIs
 
-1. Visit https://developer.oxforddictionaries.com/
-2. Click the “GET STARTED” and then “FREE”. This will prompt you to enter some information about your project.
+1. Visit the developer site of [Oxford Dictionaries](https://developer.oxforddictionaries.com/)
+
+1. Click the **GET YOUR API KEY** and setup your account. This will prompt you to enter some information about your project.
     * Application type: Learning
     * Platform: Other-> IoT
     * Agree to terms and conditions
-3. The website will send you an email to activate your account. Please do so.
-4. Sign into your account and click on “Credentials”
-5. Copy the ApplicationId and ApplicationKey. They will be needed in the code. 
 
-### Placing the keys into the code and upload program
+1. The website will send you an email and please follow the instruction to activate your account.
 
-1. Open the DevkitDictionary.ino file. Replace the first three variables with the keys copied earlier.
+1. Sign into your account and click on “Credentials”
 
-| Variable | Value |
-| :------: | :----:|
-| key1 | Key 1 from Bing Speech API |
-| appId | ApplicationId from the Dictionary API |
-| appKeys | ApplicationKey from the Dictionary API |
+1. Copy the **Application Id** and **Application Keys**. We will use them in the following session.
 
-2. Use **Quick Open** in VS Code (Windows: `Ctrl+P`, macOS: `Cmd+P`) and type **task device-upload** to build and upload the code to the DevKit.
+    ![Register Oxford Dictionaries](screenshots/oxforddict_register.png)
 
-## How to Use
+### Run the application
 
-Press and hold the B button while saying the word. The recording time is 2 seconds. Once the request has been processed, the definition of the word will appear on the screen. To scroll, press A. To start another quest, press B and say the word.
+1. Start VS Code first, and then connect the IoT DevKit to your computer.
+
+1. Use `F1` or`Ctrl+Shift+P` (macOS: `Cmd+Shift+P`) to open the command palette, type **Azure IoT Device Workbench**, and then select **Open Examples...**.
+
+	![IoT Device Workbench: Examples](screenshots/iot-workbench-examples-cmd.png)
+
+	Select **IoT DevKit**.
+		
+	![IoT Device Workbench: Examples -> Select board](screenshots/iot-workbench-examples-board.png)
+
+	Then the **IoT Device Workbench Example** window is shown up.
+
+	![IoT Device Workbench, Examples window](screenshots/iot-workbench-examples.png)
+
+1. Find the example of **IoT DevKit Dictionary** and click **Open Sample** button. 
+
+1. A new VS Code window with a project folder in it opens.
+
+	![IoT Device Workbench: open workspace](screenshots/devkitdictionary_project.png)
+
+1. Open the **DevkitDictionary.ino** file. Replace the first three variables with the keys copied earlier.
+
+    | Variable | Value |
+    | :------: | :----:|
+    | SpeechServiceAppKey | Key 1 from Azure Speech Service |
+    | OxfordDictionaryAppId | ApplicationId from the Dictionary API |
+    | OxfordDictionaryAppKeys | ApplicationKeys from the Dictionary API |
+
+1. Open the **iot_speechAPI_client.h** file. Update the following code based on the location of your Speech Service. You could find all the supported values in [Speech Service Rest APIs](https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-apis)
+
+    ```Cpp
+        /*Replace the following definitions from the value in https://docs.microsoft.com/en-us/azure/cognitive-services/speech-service/rest-apis*/
+        #define COGNITIVE_API_TOKEN_URL "https://westus.api.cognitive.microsoft.com/sts/v1.0/issueToken"
+        #define COGNITIVE_API_TOKEN_HOST "westus.api.cognitive.microsoft.com"
+        #define INTERATIVE_SPEECH_URL "https://westus.stt.speech.microsoft.com/speech/recognition/conversation/cognitiveservices/v1?language=en-US"
+
+    ```
+
+1. Open the command palette and select **Azure IoT Device Workbench: Upload Device Code**.
+
+   ![IoT Device Workbench: Device -> Upload](screenshots/iot-workbench-device-upload.png)
+
+1. VS Code then starts verifying and uploading the code to your DevKit. 
+
+## Test the project
+
+1. Press and hold the A button while saying the word. The recording time is 2 seconds. 
+
+1. Release Button A to stop recording. Wait for the request to be processed.
+
+1. The definition of the word will appear on the screen. Press button B to scroll the definition. 
+
+1. To start another quest, press A and say another word.
 
 ## Coding Exercises
 

@@ -53,6 +53,10 @@ char *dictionary_client_send_request(const char *requiredWord)
         }
         free(url);
         const char *result = json_array_get_string(json_object_get_array(jsonObject, "definitions"), 0);
+        if(!result)
+        {
+            return NULL;
+        }
         char *ret = (char *)malloc(strlen(result) + 1);
         strcpy(ret, result);
         return ret;
