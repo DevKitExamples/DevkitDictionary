@@ -46,7 +46,7 @@ char *dictionary_client_send_request(const char *requiredWord)
     if (response != NULL && response -> status_code == 200)
     {
         JSON_Object *jsonObject = json_value_get_object(json_parse_string(response->body));
-        char * propertyName[4] = {"results", "lexicalEntries", "entries", "senses"};
+        const char * propertyName[4] = {"results", "lexicalEntries", "entries", "senses"};
         for (int i = 0; i < 4; ++i)
         {
             jsonObject = json_array_get_object(json_object_get_array(jsonObject, propertyName[i]), 0);
