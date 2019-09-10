@@ -5,8 +5,7 @@ In this tutorial, you will learn how to configure DevKit to use Azure Speech Ser
 * Create and use Azure Speech Service.
 * Register and use Oxford Dictionaries API.
 
-   > **[NOTE] 
-   > This project is archived and not actively maintained.**
+> **Notice:** This project is archived and not actively maintained.
 
 ## About IoT DevKit
 
